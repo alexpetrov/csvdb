@@ -4,7 +4,6 @@
 (defn- parse-int [int-str]
   (Integer/parseInt int-str))
 
-
 (def student-tbl (csv/parse-csv (slurp "student.csv")))
 (def subject-tbl (csv/parse-csv (slurp "subject.csv")))
 (def student-subject-tbl (csv/parse-csv (slurp "student_subject.csv")))
@@ -14,7 +13,8 @@
 ;;
 ;; Hint: vec, map, keyword, first
 (defn table-keys [tbl]
-  :ImplementMe!)
+  (vec (map keyword (first student-tbl)))
+)
 
 ;; (key-value-pairs [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => (:id "1" :surname "Ivanov" :year "1996")

@@ -9,12 +9,14 @@
 
 (deftest key-value-pairs-test
   (testing
-    (is (= (vec (key-value-pairs [:id :surname :year :group_id] ["1" "Ivanov" "1996"]))
+    (is (= (vec (key-value-pairs [:id :surname :year :group_id]
+                                 ["1" "Ivanov" "1996"]))
            (vec '(:id "1" :surname "Ivanov" :year "1996"))))))
 
 (deftest data-record-test
   (testing
-      (is (= (data-record [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
+      (is (= (data-record [:id :surname :year :group_id]
+                          ["1" "Ivanov" "1996"])
              {:surname "Ivanov", :year "1996", :id "1"}))))
 
 (deftest data-table-test
@@ -43,17 +45,25 @@
 (deftest order-by*-test
   (testing
       (is (= (vec (order-by* student :year))
-             (vec '({:surname "Sidorov", :year 1996, :id 3} {:surname "Petrov", :year 1997, :id 2} {:surname "Ivanov", :year 1998, :id 1}))))))
+             (vec '({:surname "Sidorov", :year 1996, :id 3}
+                    {:surname "Petrov", :year 1997, :id 2}
+                    {:surname "Ivanov", :year 1998, :id 1}))))))
 
 (deftest join*-test
   (testing
       (is (= (vec (join* (join* student-subject :student_id student :id) :subject_id subject :id))
-             [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1} {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}]))))
+             [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
+              {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+              {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+              {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}]))))
 
 (deftest perform-joins-test
   (testing
       (is (= (vec (perform-joins student-subject [[:student_id student :id] [:subject_id subject :id]]))
-             [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1} {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}]))))
+             [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
+              {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+              {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+              {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}]))))
 
 (deftest select-test
   (testing
@@ -70,6 +80,10 @@
     (is (= (vec (select student :where #(> (:id %) 1) :order-by :year :limit 2))
            (vec '({:id 3, :year 1996, :surname "Sidorov"} {:id 2, :year 1997, :surname "Petrov"}))))
     (is (= (vec (select student-subject :joins [[:student_id student :id] [:subject_id subject :id]]))
-           (vec '[{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1} {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}])))
+           (vec '[{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
+                  {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+                  {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+                  {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}])))
     (is (= (vec (select student-subject :limit 2 :joins [[:student_id student :id] [:subject_id subject :id]]))
-           (vec '({:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1} {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2}))))))
+           (vec '({:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
+                  {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2}))))))
