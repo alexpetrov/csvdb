@@ -21,7 +21,9 @@
 ;;
 ;; Hint: flatten, map, list
 (defn key-value-pairs [tbl-keys tbl-record]
-  :ImplementMe!)
+
+  (flatten (map (fn [x y] (list y x)) tbl-record tbl-keys))
+)
 
 ;; (data-record [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => {:surname "Ivanov", :year "1996", :id "1"}
