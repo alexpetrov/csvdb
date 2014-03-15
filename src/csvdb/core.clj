@@ -13,24 +13,21 @@
 ;;
 ;; Hint: vec, map, keyword, first
 (defn table-keys [tbl]
-  (vec (map keyword (first student-tbl)))
-)
+  (vec (map keyword (first student-tbl))))
 
 ;; (key-value-pairs [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => (:id "1" :surname "Ivanov" :year "1996")
 ;;
 ;; Hint: flatten, map, list
 (defn key-value-pairs [tbl-keys tbl-record]
-
-  (flatten (map (fn [x y] (list y x)) tbl-record tbl-keys))
-)
+  (flatten (map list tbl-keys tbl-record)))
 
 ;; (data-record [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => {:surname "Ivanov", :year "1996", :id "1"}
 ;;
 ;; Hint: apply, hash-map, key-value-pairs
 (defn data-record [tbl-keys tbl-record]
-  :ImplementMe!)
+  (apply hash-map (key-value-pairs tbl-keys tbl-record)))
 
 ;; (data-table student-tbl)
 ;; => ({:surname "Ivanov", :year "1996", :id "1"}
