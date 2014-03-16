@@ -36,8 +36,8 @@
 ;;
 ;; Hint: let, map, next, table-keys, data-record
 (defn data-table [tbl]
-  (let [tbl-keys (table-keys (first student-tbl))
-      tbl-rows (rest student-tbl)]
+  (let [tbl-keys (table-keys (first tbl))
+        tbl-rows (rest tbl)]
   (map #(data-record tbl-keys %) tbl-rows)))
 
 ;; (str-field-to-int :id {:surname "Ivanov", :year "1996", :id "1"})
