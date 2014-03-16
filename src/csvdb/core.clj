@@ -59,12 +59,18 @@
                           (map #(str-field-to-int :student_id %))))
 
 
-;; (where* student (fn [rec] (> (:id rec) 1)))
+;; (where* student-tbl (fn [rec] (> (:id rec) 1)))
 ;; => ({:surname "Petrov", :year 1997, :id 2} {:surname "Sidorov", :year 1996, :id 3})
 ;;
 ;; Hint: if-not, filter
+;; QUESTION: To make this test pass we have to turn :id to int which is
+;; not the responsibility on general where* function. This seems like a
+;; little bug in the exersice. What do you think?
 (defn where* [data condition-func]
-  :ImplementMe!)
+  (filter condition-func (map #(str-field-to-int :id %) (data-table data)) ))
+
+;;(map #(str-field-to-int :id %) (data-table student-tbl))
+;;(data-table student-tbl)
 
 ;; (limit* student 1)
 ;; => ({:surname "Ivanov", :year 1998, :id 1})
