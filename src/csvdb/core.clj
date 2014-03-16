@@ -69,15 +69,12 @@
 (defn where* [data condition-func]
   (filter condition-func (map #(str-field-to-int :id %) (data-table data)) ))
 
-;;(map #(str-field-to-int :id %) (data-table student-tbl))
-;;(data-table student-tbl)
-
-;; (limit* student 1)
+;; (limit* student-tbl 1)
 ;; => ({:surname "Ivanov", :year 1998, :id 1})
 ;;
 ;; Hint: if-not, take
 (defn limit* [data lim]
-  :ImplementMe!)
+  (take lim (map #(str-field-to-int :id %) (data-table data))))
 
 ;; (order-by* student :year)
 ;; => ({:surname "Sidorov", :year 1996, :id 3} {:surname "Petrov", :year 1997, :id 2} {:surname "Ivanov", :year 1998, :id 1})
