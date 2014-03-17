@@ -13,7 +13,7 @@
 ;;
 ;; Hint: vec, map, keyword, first
 (defn table-keys [tbl]
-  (vec (map keyword (first student-tbl))))
+  (vec (map keyword (first tbl))))
 
 ;; (key-value-pairs [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => (:id "1" :surname "Ivanov" :year "1996")
@@ -30,13 +30,15 @@
   (apply hash-map (key-value-pairs tbl-keys tbl-record)))
 
 ;; (data-table student-tbl)
+;; (data-table student-subject-tbl)
+;; (table-keys student-subject-tbl)
 ;; => ({:surname "Ivanov", :year "1996", :id "1"}
 ;;     {:surname "Petrov", :year "1996", :id "2"}
 ;;     {:surname "Sidorov", :year "1997", :id "3"})
 ;;
 ;; Hint: let, map, next, table-keys, data-record
 (defn data-table [tbl]
-  (let [tbl-keys (table-keys (first tbl))
+  (let [tbl-keys (table-keys tbl)
         tbl-rows (rest tbl)]
   (map #(data-record tbl-keys %) tbl-rows)))
 
@@ -58,8 +60,7 @@
                           (map #(str-field-to-int :subject_id %))
                           (map #(str-field-to-int :student_id %))))
 
-
-;; (where1* student (fn [rec] (> (:id rec) 1)))
+;; (where* student (fn [rec] (> (:id rec) 1)))
 ;; => ({:surname "Petrov", :year 1997, :id 2} {:surname "Sidorov", :year 1996, :id 3})
 ;;
 ;; Hint: if-not, filter
@@ -74,10 +75,15 @@
   (take lim data))
 
 ;; (order-by* student :year)
+;; (order-by* nil :year)
 ;; => ({:surname "Sidorov", :year 1996, :id 3} {:surname "Petrov", :year 1997, :id 2} {:surname "Ivanov", :year 1998, :id 1})
 ;; Hint: if-not, sort-by
+;; FIXME: Not sure for what reason to use if-not function here.
+;; My current assumption is to check data on nil.
 (defn order-by* [data column]
   (sort-by column data))
+;;(defn order-by* [data column]
+;;  (if-not (nil? column)(sort-by column data)))
 
 ;; (join* (join* student-subject :student_id student :id) :subject_id subject :id)
 ;; => [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
@@ -93,10 +99,84 @@
   ;; 3. For each element of data1 (lets call it element1) find all elements of data2 (lets call each as element2) where column1 = column2.
   ;; 4. Use function 'merge' and merge element1 with each element2.
   ;; 5. Collect merged elements.
-  :ImplementMe!)
+  (reduce
+   (fn [acc elem]
+     (conj
+        acc
+        (first
+          (reduce
+            #(conj %1 (merge %2 elem))
+            []
+            (filter #(= (column1 elem) (column2 %)) data2)))))
+   []
+   data1
+))
+
+
+;; This is part implementation of 3
+;; 3. For each element of data1 (lets call it element1) find all elements of data2 (lets call each as element2) where column1 = column2.
+(let [data1 student-subject
+      column1 :student_id
+      data2 student
+      column2 :id
+      element1 (first data1)]
+  (reduce (fn [acc elem] (vector acc elem)) (filter #(= (column1 element1) (column2 %)) data2)))
+
+;; 4. Use function 'merge' and merge element1 with each element2.
+(let [data1 student-subject
+      column1 :student_id
+      data2 student
+      column2 :id]
+  (reduce (fn [acc elem] (conj acc (reduce #(conj %1 (merge %2 elem)) [] (filter #(= (column1 elem) (column2 %)) data2)))) [] data1)
+
+  )
+
+
+
+(function1 (first student-subject))
+
+
+
+(let [data1 student-subject
+      column1 :student_id
+      data2 student
+      column2 :id
+      element1 (merge (first data1) {:data "data" :more_data "more_data"} )]
+  (reduce #(vector %1 (merge %2 element1)) (filter #(= (column1 element1) (column2 %)) data2)))
+
+(conj (first student-subject) [:data "data"])
+;; 5. Collect merged elements.
+(let [data1 student-subject
+      column1 :student_id
+      data2 student
+      column2 :id
+      element1 (first data1)]
+  (reduce #(vector %1 (merge element1 %2)) (filter #(= (column1 element1) (column2 %)) data2)))
+
+
+
+;; (let [data1 student-subject                        ;; ;;
+;;       column1 :student_id                          ;; ;;
+;;       data2 student                                ;; ;;
+;;       column2 :id                                  ;; ;;
+;;       element1 (first data1)]                      ;; ;;
+;; (filter #(= (column1 element1) (column2 %)) data2) ;; ;;
+;;   )                                                ;; ;;
+
+
+
+(merge {:id 1} {:id 2 :data 3})
+(let [element1 {:id 1}
+     column1 :id
+     column2 :id]
+ (filter #(= (column1 %) (column2 element1)) student))
+(filter #(= (:id %) 1) student)
 
 ;; (perform-joins student-subject [[:student_id student :id] [:subject_id subject :id]])
-;; => [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1} {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2} {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}]
+;; => [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
+;;     {:subject "Math", :subject_id 1, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+;;     {:subject "CS", :subject_id 2, :surname "Petrov", :year 1997, :student_id 2, :id 2}
+;;     {:subject "CS", :subject_id 2, :surname "Sidorov", :year 1996, :student_id 3, :id 3}]
 ;;
 ;; Hint: loop-recur, let, first, next, join*
 (defn perform-joins [data joins*]
