@@ -100,77 +100,16 @@
   ;; 4. Use function 'merge' and merge element1 with each element2.
   ;; 5. Collect merged elements.
   (reduce
-   (fn [acc elem]
-     (conj
+    (fn [acc elem]
+      (conj
         acc
         (first
           (reduce
             #(conj %1 (merge %2 elem))
             []
             (filter #(= (column1 elem) (column2 %)) data2)))))
-   []
-   data1
-))
-
-
-;; This is part implementation of 3
-;; 3. For each element of data1 (lets call it element1) find all elements of data2 (lets call each as element2) where column1 = column2.
-(let [data1 student-subject
-      column1 :student_id
-      data2 student
-      column2 :id
-      element1 (first data1)]
-  (reduce (fn [acc elem] (vector acc elem)) (filter #(= (column1 element1) (column2 %)) data2)))
-
-;; 4. Use function 'merge' and merge element1 with each element2.
-(let [data1 student-subject
-      column1 :student_id
-      data2 student
-      column2 :id]
-  (reduce (fn [acc elem] (conj acc (reduce #(conj %1 (merge %2 elem)) [] (filter #(= (column1 elem) (column2 %)) data2)))) [] data1)
-
-  )
-
-
-
-(function1 (first student-subject))
-
-
-
-(let [data1 student-subject
-      column1 :student_id
-      data2 student
-      column2 :id
-      element1 (merge (first data1) {:data "data" :more_data "more_data"} )]
-  (reduce #(vector %1 (merge %2 element1)) (filter #(= (column1 element1) (column2 %)) data2)))
-
-(conj (first student-subject) [:data "data"])
-;; 5. Collect merged elements.
-(let [data1 student-subject
-      column1 :student_id
-      data2 student
-      column2 :id
-      element1 (first data1)]
-  (reduce #(vector %1 (merge element1 %2)) (filter #(= (column1 element1) (column2 %)) data2)))
-
-
-
-;; (let [data1 student-subject                        ;; ;;
-;;       column1 :student_id                          ;; ;;
-;;       data2 student                                ;; ;;
-;;       column2 :id                                  ;; ;;
-;;       element1 (first data1)]                      ;; ;;
-;; (filter #(= (column1 element1) (column2 %)) data2) ;; ;;
-;;   )                                                ;; ;;
-
-
-
-(merge {:id 1} {:id 2 :data 3})
-(let [element1 {:id 1}
-     column1 :id
-     column2 :id]
- (filter #(= (column1 %) (column2 element1)) student))
-(filter #(= (:id %) 1) student)
+    []
+    data1))
 
 ;; (perform-joins student-subject [[:student_id student :id] [:subject_id subject :id]])
 ;; => [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
