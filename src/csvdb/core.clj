@@ -27,7 +27,9 @@
 ;;
 ;; Hint: apply, hash-map, key-value-pairs
 (defn data-record [tbl-keys tbl-record]
-  (apply hash-map (key-value-pairs tbl-keys tbl-record)))
+  (zipmap tbl-keys tbl-record))
+
+
 
 ;; (table-keys student-subject-tbl)
 ;; => ({:surname "Ivanov", :year "1996", :id "1"}
