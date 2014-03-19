@@ -29,8 +29,6 @@
 (defn data-record [tbl-keys tbl-record]
   (zipmap tbl-keys tbl-record))
 
-
-
 ;; (table-keys student-subject-tbl)
 ;; => ({:surname "Ivanov", :year "1996", :id "1"}
 ;;     {:surname "Petrov", :year "1996", :id "2"}
@@ -65,20 +63,26 @@
 ;;
 ;; Hint: if-not, filter
 (defn where* [data condition-func]
-  (if-not (nil? condition-func) (filter condition-func data) data))
+  (if-not (nil? condition-func)
+    (filter condition-func data)
+    data))
 
 ;; (limit* student 1)
 ;; => ({:surname "Ivanov", :year 1998, :id 1})
 ;;
 ;; Hint: if-not, take
 (defn limit* [data lim]
-  (if-not (nil? lim) (take lim data) data))
+  (if-not (nil? lim)
+    (take lim data)
+    data))
 
 ;; (order-by* student nil)
 ;; => ({:surname "Sidorov", :year 1996, :id 3} {:surname "Petrov", :year 1997, :id 2} {:surname "Ivanov", :year 1998, :id 1})
 ;; Hint: if-not, sort-by
 (defn order-by* [data column]
-   (if-not (nil? column) (sort-by column data) data) )
+   (if-not (nil? column)
+     (sort-by column data)
+     data))
 
 ;; (join* (join* student-subject :student_id student :id) :subject_id subject :id)
 ;; => [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
