@@ -13,14 +13,18 @@
 ;;
 ;; Hint: vec, map, keyword, first
 (defn table-keys [tbl]
-  (vec (map keyword (first tbl))))
+  (mapv keyword (first tbl))
+;;  (vec (map keyword (first tbl)))
+)
 
-;; (key-value-pairs [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => (:id "1" :surname "Ivanov" :year "1996")
 ;;
 ;; Hint: flatten, map, list
 (defn key-value-pairs [tbl-keys tbl-record]
-  (flatten (map list tbl-keys tbl-record)))
+  (interleave tbl-keys tbl-record)
+;;  (mapcat list tbl-keys tbl-record)
+;;  (flatten (map list tbl-keys tbl-record))
+)
 
 ;; (data-record [:id :surname :year :group_id] ["1" "Ivanov" "1996"])
 ;; => {:surname "Ivanov", :year "1996", :id "1"}
@@ -45,7 +49,9 @@
 ;;
 ;; Hint: assoc, Integer/parseInt, get
 (defn str-field-to-int [field rec]
-  (assoc rec field (parse-int (field rec))))
+  (update-in rec [field] parse-int)
+;;  (assoc rec field (parse-int (field rec)))
+)
 
 (def student (->> (data-table student-tbl)
                   (map #(str-field-to-int :id %))
@@ -98,17 +104,31 @@
   ;; 3. For each element of data1 (lets call it element1) find all elements of data2 (lets call each as element2) where column1 = column2.
   ;; 4. Use function 'merge' and merge element1 with each element2.
   ;; 5. Collect merged elements.
-  (reduce
-    (fn [acc elem]
-      (conj
-        acc
-        (first
-          (reduce
-            #(conj %1 (merge %2 elem))
-            []
-            (filter #(= (column1 elem) (column2 %)) data2)))))
-    []
-    data1))
+  ;; (reduce
+  ;;   (fn [acc elem]
+  ;;     (conj
+  ;;       acc
+  ;;         ;; (reduce
+  ;;         ;;   #(conj %1 (merge %2 elem))
+  ;;         ;;   []
+  ;;         ;;   (filter #(= (column1 elem) (column2 %)) data2))
+
+  ;;       (first
+  ;;         (reduce
+  ;;           #(conj %1 (merge %2 elem))
+  ;;           []
+  ;;           (filter #(= (column1 elem) (column2 %)) data2))
+  ;;         )
+  ;;       ))
+  ;;   []
+  ;;   data1)
+  (for [element1 data1
+        element2 data2
+        :when (= (column1 element1) (column2 element2) )] (merge element1 element2))
+)
+
+;; (= {:a 1 :b 2} {:b 2 :a 1})
+;; (= '(1 2 3) '[1 3 2])
 
 ;; (perform-joins student-subject [[:student_id student :id] [:subject_id subject :id]])
 ;; => [{:subject "Math", :subject_id 1, :surname "Ivanov", :year 1998, :student_id 1, :id 1}
