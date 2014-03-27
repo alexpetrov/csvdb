@@ -133,14 +133,6 @@
         :when (= (column1 element1) (column2 element2) )] (merge element2 element1))
 )
 
-(let [data1 student
-      column1 :id
-      data2 student-subject
-      column2 :student_id]
-  (->> (identity data1)
-       (identity)))
-
-
 ;; (= {:a 1 :b 2} {:b 2 :a 1})
 ;; (= '(1 2 3) '[1 3 2])
 ;; (merge {:a 1 :b 2} {:b 3 :a 1 :c 3})
