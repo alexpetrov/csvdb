@@ -117,10 +117,29 @@
   ;;       ))
   ;;   []
   ;;   data1)
+  ;; The same but more readable way
+  ;; (reduce
+  ;;   (fn [acc elem]
+  ;;    (->> data2
+  ;;         (filter #(= (column1 elem) (column2 %)))
+  ;;         (reduce #(conj %1 (merge %2 elem)) [])
+  ;;         (first)
+  ;;         (conj acc)))
+  ;;   []
+  ;;   data1)
+  ;; The most idiomatic way with "for" list comprehension
   (for [element1 data1
         element2 data2
         :when (= (column1 element1) (column2 element2) )] (merge element2 element1))
 )
+
+(let [data1 student
+      column1 :id
+      data2 student-subject
+      column2 :student_id]
+  (->> (identity data1)
+       (identity)))
+
 
 ;; (= {:a 1 :b 2} {:b 2 :a 1})
 ;; (= '(1 2 3) '[1 3 2])
