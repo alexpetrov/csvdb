@@ -69,7 +69,7 @@
 ;;
 ;; Hint: if-not, filter
 (defn where* [data condition-func]
-  (if-not (nil? condition-func)
+  (if condition-func
     (filter condition-func data)
     data))
 
@@ -78,7 +78,7 @@
 ;;
 ;; Hint: if-not, take
 (defn limit* [data lim]
-  (if-not (nil? lim)
+  (if lim
     (take lim data)
     data))
 
@@ -86,7 +86,7 @@
 ;; => ({:surname "Sidorov", :year 1996, :id 3} {:surname "Petrov", :year 1997, :id 2} {:surname "Ivanov", :year 1998, :id 1})
 ;; Hint: if-not, sort-by
 (defn order-by* [data column]
-   (if-not (nil? column)
+  (if column
      (sort-by column data)
      data))
 
